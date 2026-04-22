@@ -137,6 +137,8 @@ $(function(){
 
         if (carta1.data("id") === carta2.data("id")) {
             cartasLevantadas = [];
+            borrarCarta(carta1);
+            borrarCarta(carta2);
         } else {
             bloquearTablero = true;
             ocultarCartas(carta1, carta2);
@@ -152,5 +154,11 @@ $(function(){
             cartasLevantadas = [];
             bloquearTablero = false;
         }, 1000);
+    }
+
+    function borrarCarta(carta) {
+        setTimeout(() => {
+            $(carta).addClass("solucionado");
+        }, 1250);
     }
 });

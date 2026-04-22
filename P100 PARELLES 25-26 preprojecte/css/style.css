@@ -49,6 +49,9 @@ body {
     transform: rotate3d(0,1,0,-180deg);
 }
 
+.solucionado {
+    display: none;
+}
 
 .carta-girada .darrera {
     transform: rotate3d(0,1,0,180deg);
