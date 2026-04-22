@@ -1,14 +1,3 @@
-var ampladaCarta, alcadaCarta;
-var separacioH=20, separacioV=20;
-var nFiles=4, nColumnes=4;
-const tauler= document.getElementById("tauler");
-const cartesT=nFiles*nColumnes;
-
-var jocCartes = [
-    'carta14', 
-];
-
-
 $(function(){
     const ampladaCarta = 80; 
     const alcadaCarta = 120;
@@ -18,103 +7,150 @@ $(function(){
     let cartasLevantadas = [];
     let bloquearTablero = false;
 
-    $("#btn-iniciar").on("click", function() {
-        let dimensions = $("#nivell").val().split("x");
-        let files = parseInt(dimensions[0]);
-        let columnes = parseInt(dimensions[1]);
-        
-        generarJoc(files, columnes);
-    });
+    $("#btn-iniciar").on("click", iniciarDesdeSelector);
 
     generarJoc(4, 4);
 
+    // 🔹 INICIAR DESDE SELECTOR
+    function iniciarDesdeSelector() {
+        let dimensions = $("#nivell").val().split("x");
+        let files = parseInt(dimensions[0]);
+        let columnes = parseInt(dimensions[1]);
+
+        generarJoc(files, columnes);
+    }
+
+    // 🔹 GENERAR JUEGO
     function generarJoc(nFiles, nColumnes) {
-        const tauler = $("#tauler");
-        tauler.empty(); 
-        
+        resetEstado();
+        configurarTauler(nFiles, nColumnes);
+
+        let jocCartes = crearCartes(nFiles, nColumnes);
+        pintarCartes(nFiles, nColumnes, jocCartes);
+
+        asignarEventos();
+    }
+
+    // 🔹 RESET ESTADO
+    function resetEstado() {
         cartasLevantadas = [];
         bloquearTablero = false;
+        $("#tauler").empty();
+    }
 
+    // 🔹 CONFIGURAR TABLERO
+    function configurarTauler(nFiles, nColumnes) {
         let ampladaTotal = (nColumnes * (ampladaCarta + separacioH)) + separacioH;
         let alcadaTotal = (nFiles * (alcadaCarta + separacioV)) + separacioV;
-        
-        tauler.css({
-            "width" : ampladaTotal + "px",
-            "height": alcadaTotal + "px"
-        });
 
-        let totalCartes = nFiles * nColumnes;
-        let totalParelles = totalCartes / 2;
-        let jocCartes = [];
+        $("#tauler").css({
+            width: ampladaTotal + "px",
+            height: alcadaTotal + "px"
+        });
+    }
+
+    // 🔹 CREAR ARRAY DE CARTAS
+    function crearCartes(nFiles, nColumnes) {
+        let totalParelles = (nFiles * nColumnes) / 2;
+        let cartes = [];
 
         for (let i = 1; i <= totalParelles; i++) {
-            jocCartes.push(i); 
-            jocCartes.push(i); 
+            cartes.push(i, i);
         }
 
-        jocCartes.sort(() => Math.random() - 0.5);
+        return barrejar(cartes);
+    }
 
+    // 🔹 MEZCLAR CARTAS
+    function barrejar(array) {
+        return array.sort(() => Math.random() - 0.5);
+    }
+
+    // 🔹 PINTAR CARTAS
+    function pintarCartes(nFiles, nColumnes, jocCartes) {
         let indexCarta = 0;
+
         for (let f = 1; f <= nFiles; f++) {
             for (let c = 1; c <= nColumnes; c++) {
-                let idCarta = jocCartes[indexCarta]; 
-                indexCarta++;
+                let idCarta = jocCartes[indexCarta++];
+                let carta = crearCartaHTML(f, c, idCarta);
 
-                
-                let cartaHTML = $(`
-                    <div class="carta" id="f${f}c${c}" data-id="${idCarta}">
-                        <div class="cara darrera"></div>
-                        <div class="cara davant"></div>
-                    </div>
-                `);
-
-                cartaHTML.css({
-                    "left" : ((c - 1) * (ampladaCarta + separacioH) + separacioH) + "px",
-                    "top"  : ((f - 1) * (alcadaCarta + separacioV) + separacioV) + "px"
-                });
-
-                let colImatge = (idCarta - 1) % 13;
-                let filaImatge = Math.floor((idCarta - 1) / 13);
-                let posX = -(colImatge * 80);
-                let posY = -(filaImatge * 120);
-                
-                cartaHTML.find(".davant").css("background-position", `${posX}px ${posY}px`);
-
-                tauler.append(cartaHTML);
+                $("#tauler").append(carta);
             }
         }
+    }
 
-        
-        $(".carta").on("click", function(){
-            // Si el tablero está bloqueado o la carta ya está girada, no hacemos nada
-            if (bloquearTablero || $(this).hasClass("carta-girada")) return;
+    // 🔹 CREAR HTML DE UNA CARTA
+    function crearCartaHTML(f, c, idCarta) {
+        let carta = $(`
+            <div class="carta" data-id="${idCarta}">
+                <div class="cara darrera"></div>
+                <div class="cara davant"></div>
+            </div>
+        `);
 
-         
-            $(this).addClass("carta-girada");
-            cartasLevantadas.push($(this));
+        posicionarCarta(carta, f, c);
+        asignarImagen(carta, idCarta);
 
-            if (cartasLevantadas.length === 2) {
-                let carta1 = cartasLevantadas[0];
-                let carta2 = cartasLevantadas[1];
+        return carta;
+    }
 
-                // Comparamos los data-id
-                if (carta1.data("id") === carta2.data("id")) {
-                   
-                    cartasLevantadas = [];
-                } else {
-                   
-                    bloquearTablero = true;
-                    
-                    setTimeout(() => {
-                        carta1.removeClass("carta-girada");
-                        carta2.removeClass("carta-girada");
-                        
-                        // Reseteamos todo para el siguiente turno
-                        cartasLevantadas = [];
-                        bloquearTablero = false;
-                    }, 1000); // 1000 milisegundos = 1 segundo de espera
-                }
-            }
+    // 🔹 POSICIONAR CARTA
+    function posicionarCarta(carta, f, c) {
+        carta.css({
+            left: ((c - 1) * (ampladaCarta + separacioH) + separacioH) + "px",
+            top: ((f - 1) * (alcadaCarta + separacioV) + separacioV) + "px"
         });
+    }
+
+    // 🔹 ASIGNAR IMAGEN
+    function asignarImagen(carta, idCarta) {
+        let col = (idCarta - 1) % 13;
+        let fila = Math.floor((idCarta - 1) / 13);
+
+        let posX = -(col * ampladaCarta);
+        let posY = -(fila * alcadaCarta);
+
+        carta.find(".davant").css("background-position", `${posX}px ${posY}px`);
+    }
+
+    // 🔹 EVENTOS
+    function asignarEventos() {
+        $(".carta").on("click", manejarClickCarta);
+    }
+
+    // 🔹 CLICK CARTA
+    function manejarClickCarta() {
+        if (bloquearTablero || $(this).hasClass("carta-girada")) return;
+
+        $(this).addClass("carta-girada");
+        cartasLevantadas.push($(this));
+
+        if (cartasLevantadas.length === 2) {
+            compararCartas();
+        }
+    }
+
+    // 🔹 COMPARAR CARTAS
+    function compararCartas() {
+        let [carta1, carta2] = cartasLevantadas;
+
+        if (carta1.data("id") === carta2.data("id")) {
+            cartasLevantadas = [];
+        } else {
+            bloquearTablero = true;
+            ocultarCartas(carta1, carta2);
+        }
+    }
+
+    // 🔹 OCULTAR CARTAS
+    function ocultarCartas(carta1, carta2) {
+        setTimeout(() => {
+            carta1.removeClass("carta-girada");
+            carta2.removeClass("carta-girada");
+
+            cartasLevantadas = [];
+            bloquearTablero = false;
+        }, 1000);
     }
 });
