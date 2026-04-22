@@ -7,11 +7,18 @@ $(function(){
     let cartasLevantadas = [];
     let bloquearTablero = false;
 
+    let parejasEncontradas = 0;
+    let totalParejas = 0;
+    let contadorClicks = 0;
+    let maxClicks = 0;
+
+    let nFilesActual = 4;
+    let nColumnesActual = 4;
+
     $("#btn-iniciar").on("click", iniciarDesdeSelector);
 
     generarJoc(4, 4);
 
-    // 🔹 INICIAR DESDE SELECTOR
     function iniciarDesdeSelector() {
         let dimensions = $("#nivell").val().split("x");
         let files = parseInt(dimensions[0]);
@@ -20,25 +27,30 @@ $(function(){
         generarJoc(files, columnes);
     }
 
-    // 🔹 GENERAR JUEGO
     function generarJoc(nFiles, nColumnes) {
+        nFilesActual = nFiles;
+        nColumnesActual = nColumnes;
+
         resetEstado();
         configurarTauler(nFiles, nColumnes);
 
         let jocCartes = crearCartes(nFiles, nColumnes);
         pintarCartes(nFiles, nColumnes, jocCartes);
 
+        totalParejas = (nFiles * nColumnes) / 2;
+        parejasEncontradas = 0;
+        inicializarContador(nFiles, nColumnes);
+
         asignarEventos();
     }
 
-    // 🔹 RESET ESTADO
     function resetEstado() {
         cartasLevantadas = [];
         bloquearTablero = false;
         $("#tauler").empty();
+        $(".mensaje-final").remove();
     }
 
-    // 🔹 CONFIGURAR TABLERO
     function configurarTauler(nFiles, nColumnes) {
         let ampladaTotal = (nColumnes * (ampladaCarta + separacioH)) + separacioH;
         let alcadaTotal = (nFiles * (alcadaCarta + separacioV)) + separacioV;
@@ -49,7 +61,6 @@ $(function(){
         });
     }
 
-    // 🔹 CREAR ARRAY DE CARTAS
     function crearCartes(nFiles, nColumnes) {
         let totalParelles = (nFiles * nColumnes) / 2;
         let cartes = [];
@@ -61,12 +72,10 @@ $(function(){
         return barrejar(cartes);
     }
 
-    // 🔹 MEZCLAR CARTAS
     function barrejar(array) {
         return array.sort(() => Math.random() - 0.5);
     }
 
-    // 🔹 PINTAR CARTAS
     function pintarCartes(nFiles, nColumnes, jocCartes) {
         let indexCarta = 0;
 
@@ -80,7 +89,6 @@ $(function(){
         }
     }
 
-    // 🔹 CREAR HTML DE UNA CARTA
     function crearCartaHTML(f, c, idCarta) {
         let carta = $(`
             <div class="carta" data-id="${idCarta}">
@@ -95,7 +103,6 @@ $(function(){
         return carta;
     }
 
-    // 🔹 POSICIONAR CARTA
     function posicionarCarta(carta, f, c) {
         carta.css({
             left: ((c - 1) * (ampladaCarta + separacioH) + separacioH) + "px",
@@ -103,7 +110,6 @@ $(function(){
         });
     }
 
-    // 🔹 ASIGNAR IMAGEN
     function asignarImagen(carta, idCarta) {
         let col = (idCarta - 1) % 13;
         let fila = Math.floor((idCarta - 1) / 13);
@@ -114,14 +120,14 @@ $(function(){
         carta.find(".davant").css("background-position", `${posX}px ${posY}px`);
     }
 
-    // 🔹 EVENTOS
     function asignarEventos() {
         $(".carta").on("click", manejarClickCarta);
     }
 
-    // 🔹 CLICK CARTA
     function manejarClickCarta() {
         if (bloquearTablero || $(this).hasClass("carta-girada")) return;
+
+        registrarClick();
 
         $(this).addClass("carta-girada");
         cartasLevantadas.push($(this));
@@ -131,21 +137,21 @@ $(function(){
         }
     }
 
-    // 🔹 COMPARAR CARTAS
     function compararCartas() {
         let [carta1, carta2] = cartasLevantadas;
 
         if (carta1.data("id") === carta2.data("id")) {
+            parejasEncontradas++;
             cartasLevantadas = [];
             borrarCarta(carta1);
             borrarCarta(carta2);
+            comprobarVictoria();
         } else {
             bloquearTablero = true;
             ocultarCartas(carta1, carta2);
         }
     }
 
-    // 🔹 OCULTAR CARTAS
     function ocultarCartas(carta1, carta2) {
         setTimeout(() => {
             carta1.removeClass("carta-girada");
@@ -161,4 +167,41 @@ $(function(){
             $(carta).addClass("solucionado");
         }, 1250);
     }
+    function comprobarVictoria() {
+        if (parejasEncontradas === totalParejas) {
+            mostrarMensajeFinal("Has ganado quieres volver a jugar?");
+        }
+    }
+
+    function inicializarContador(nFiles, nColumnes) {
+        let totalCartes = nFiles * nColumnes;
+        maxClicks = totalCartes * 3;
+        contadorClicks = 0;
+    }
+
+    function registrarClick() {
+        contadorClicks++;
+
+        if (contadorClicks >= maxClicks) {
+            mostrarMensajeFinal(" Has perdido. Demasiados intentos");
+        }
+    }
+    function mostrarMensajeFinal(texto) {
+        bloquearTablero = true;
+
+        const mensaje = $(`
+            <div class="mensaje-final">
+                <h2>${texto}</h2>
+                <button id="btn-reset">Volver a jugar</button>
+            </div>
+        `);
+
+        $("body").append(mensaje);
+
+        $("#btn-reset").on("click", function(){
+            generarJoc(nFilesActual, nColumnesActual);
+        });
+    }
 });
+
+ 
