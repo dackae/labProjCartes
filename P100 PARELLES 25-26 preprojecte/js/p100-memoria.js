@@ -20,15 +20,54 @@ $(function(){
     let nFilesActual = 4;
     let nColumnesActual = 4;
 
-    $("#btn-iniciar").on("click", iniciarDesdeSelector);
+    $("#nivell").on("change", function() {
+        if ($(this).val() === "personalitzat") {
+            $("#personalitzat-size").show();
+        } else {
+            $("#personalitzat-size").hide();
+        }
+    });
 
     let mensajeInicial = $("#mensajeInicial");
     let baralla;
+    let dimensioPesonalitzada = $("#personalitzat-size")
+
+    $("#btn-iniciar").on("click", iniciarDesdeSelector);
 
     function iniciarDesdeSelector() {
-        let dimensions = $("#nivell").val().split("x");
         baralla = $("#cartes").val();
-        console.log(baralla);
+        let dimensions;
+        let nivell = $("#nivell").val();
+
+        if (nivell === "personalitzat") {
+            let files = parseInt($("#files").val());
+            let columnes = parseInt($("#columnes").val());
+
+            if (!files || !columnes || files < 2 || columnes < 2) {
+                alert("Introdueix un nombre vàlid de files i columnes (mínim 2).");
+                return;
+            }
+            let n = files * columnes;
+            let m = n / 2;
+
+            if (n % 2 !== 0) {
+                alert("El total de cartes ha de ser parell (files × columnes ha de ser parell).");
+                return;
+            }
+            let max;
+            switch (baralla) {
+                case "deck":
+                case "poker1": max = 52; break;
+                case "pokemon": max = 21; break;
+            }
+            if (m > max) {
+                alert(`Massa cartes! Amb "${baralla}" el màxim és ${max * 2} cartes (${max} parelles).`);
+                return;
+            }
+            dimensions = [files, columnes];
+        } else {
+            dimensions = nivell.split("x");
+        }
 
         switch (baralla) {
             case "deck": {
@@ -39,7 +78,6 @@ $(function(){
                 columnaPerBaralla = 13;
                 break;
             }
-
             case "poker1": {
                 ampladaCarta = 79;
                 alcadaCarta = 120;
@@ -48,7 +86,6 @@ $(function(){
                 columnaPerBaralla = 13;
                 break;
             }
-
             case "pokemon": {
                 ampladaCarta = 111;
                 alcadaCarta = 111;
@@ -58,8 +95,6 @@ $(function(){
                 break;
             }
         }
-        console.log(ampladaCarta);
-
         generarJoc(parseInt(dimensions[0]), parseInt(dimensions[1]));
     }
 

@@ -72,6 +72,7 @@ body {
 
 .davant {
     transform: rotate3d(0,1,0,-180deg);    
+    background-position: 0 0;
 }
 
 .darrera.deck {
