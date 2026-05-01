@@ -44,14 +44,20 @@ $(function(){
             let columnes = parseInt($("#columnes").val());
 
             if (!files || !columnes || files < 2 || columnes < 2) {
+                playSound("error");
+                setTimeout(function() {
                 alert("Introdueix un nombre vàlid de files i columnes (mínim 2).");
+                }, 10);
                 return;
             }
             let n = files * columnes;
             let m = n / 2;
 
             if (n % 2 !== 0) {
+                playSound("error");
+                setTimeout(function() {
                 alert("El total de cartes ha de ser parell (files × columnes ha de ser parell).");
+                }, 10);
                 return;
             }
             let max;
@@ -61,7 +67,10 @@ $(function(){
                 case "pokemon": max = 21; break;
             }
             if (m > max) {
+                playSound("error");
+                setTimeout(function() {
                 alert(`Massa cartes! Amb "${baralla}" el màxim és ${max * 2} cartes (${max} parelles).`);
+                }, 10);
                 return;
             }
             dimensions = [files, columnes];
@@ -202,7 +211,7 @@ $(function(){
 
     function manejarClickCarta() {
         if (bloquearTablero || juegoTerminado || $(this).hasClass("carta-girada")) return;
-
+        playSound("girar");
         registrarClick();
 
         $(this).addClass("carta-girada");
@@ -221,6 +230,7 @@ $(function(){
             cartasLevantadas = [];
 
             actualizarMarcador();
+            playSound("parella");
 
             setTimeout(() => {
                 carta1.addClass("solucionado");
@@ -245,6 +255,7 @@ $(function(){
 
     function comprobarVictoria() {
         if (parejasEncontradas === totalParejas) {
+            playSound("victoria");
             mostrarMensajeFinal("Has ganado ¿quieres volver a jugar?");
         }
     }
@@ -308,7 +319,8 @@ $(function(){
         clearInterval(temporizador);
 
         mostrarCartasEnCascada();
-
+        playSound("derrota");
+        
         setTimeout(() => {
             mostrarMensajeFinal(texto);
         }, $(".carta").length * 80);
@@ -327,5 +339,16 @@ $(function(){
         $("#btn-reset").on("click", function(){
             generarJoc(nFilesActual, nColumnesActual);
         });
+    }
+
+    function playSound(nom) {
+    const sons = {
+        "girar":    new Audio("sounds/cardFlipStrong.wav"),
+        "parella":  new Audio("sounds/correctPair.mp3"),
+        "error":    new Audio("sounds/alert.mp3"),
+        "derrota":  new Audio("sounds/gameOver.wav"),
+        "victoria": new Audio("sounds/winSynth.wav")
+    };
+    sons[nom].play();
     }
 });
