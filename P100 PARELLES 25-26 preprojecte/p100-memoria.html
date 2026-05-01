@@ -22,13 +22,22 @@
             <option value="4x4" selected>Normal (4x4)</option>
             <option value="4x6">Difícil (4x6)</option>
         </select>
+        <label for="cartes"> Escull el tipus de cartes: </label>
+        <select id="cartes">
+            <option value="deck" selected>Pòquer modern</option>
+            <option value="poker1">Pòquer clàssic</option>
+            <option value="pokemon">Pokemon</option>
+        </select>
         <button id="btn-iniciar">Generar Joc</button>
     </div>
+
 </header>
 
 <div id="juego-contenedor">
     
-    <div id="tauler"></div>
+    <div id="tauler">
+        <p id="mensajeInicial">Escull un mode per començar a jugar</p>
+    </div>
 
     <div id="marcador">
         <p>Parelles: <span id="parelles">0</span></p>

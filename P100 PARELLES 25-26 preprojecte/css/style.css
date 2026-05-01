@@ -21,6 +21,11 @@ body {
     box-shadow: 0 -1px 0 #999, 0 1px 0 #999, inset 0;
 }
 
+#mensajeInicial {
+    color: white;
+    padding-inline: 5px;
+    font-weight: bold;
+}
 
 #marcador {
     background: rgba(0,0,0,0.8);
@@ -42,7 +47,8 @@ body {
 
 
 .carta {
-    width: 80px;	height: 120px;
+    width: var(--amplada-carta, 80px);
+    height: var(--alcada-carta, 120px);
     position: absolute;
 
     -webkit-perspective: 300px;
@@ -64,13 +70,32 @@ body {
     backface-visibility: hidden;
 }
 
-.darrera {
+.davant {
+    transform: rotate3d(0,1,0,-180deg);    
+}
+
+.darrera.deck {
     background: #999 url(../images/deck.png) 0px -480px;
 }
 
-.davant {
+.davant.deck {
     background: #efefef url(../images/deck.png);
-    transform: rotate3d(0,1,0,-180deg);
+}
+
+.darrera.poker1 {
+    background: #999 url(../images/poker1.png) 0px -494px;
+}
+
+.davant.poker1 {
+    background: #efefef url(../images/poker1.png);
+}
+
+.darrera.pokemon {
+    background: #999 url(../images/pokemon.jpg) -777px 0px;
+}
+
+.davant.pokemon {
+    background: #efefef url(../images/pokemon.jpg);
 }
 
 

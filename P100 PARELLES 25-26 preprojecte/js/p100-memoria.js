@@ -1,8 +1,9 @@
 $(function(){
-    const ampladaCarta = 80; 
-    const alcadaCarta = 120;
-    const separacioH = 20;
-    const separacioV = 20;
+    let ampladaCarta = 0;
+    let alcadaCarta = 0;
+    let separacioH = 0;
+    let separacioV = 0;
+    let columnaPerBaralla= 0;
 
     let cartasLevantadas = [];
     let bloquearTablero = false;
@@ -21,14 +22,53 @@ $(function(){
 
     $("#btn-iniciar").on("click", iniciarDesdeSelector);
 
-    generarJoc(4, 4);
+    let mensajeInicial = $("#mensajeInicial");
+    let baralla;
 
     function iniciarDesdeSelector() {
         let dimensions = $("#nivell").val().split("x");
+        baralla = $("#cartes").val();
+        console.log(baralla);
+
+        switch (baralla) {
+            case "deck": {
+                ampladaCarta = 80;
+                alcadaCarta = 120;
+                separacioH = 20;
+                separacioV = 20;
+                columnaPerBaralla = 13;
+                break;
+            }
+
+            case "poker1": {
+                ampladaCarta = 79;
+                alcadaCarta = 120;
+                separacioH = 20;
+                separacioV = 20;
+                columnaPerBaralla = 13;
+                break;
+            }
+
+            case "pokemon": {
+                ampladaCarta = 111;
+                alcadaCarta = 111;
+                separacioH = 20;
+                separacioV = 20;
+                columnaPerBaralla = 7;
+                break;
+            }
+        }
+        console.log(ampladaCarta);
+
         generarJoc(parseInt(dimensions[0]), parseInt(dimensions[1]));
     }
 
     function generarJoc(nFiles, nColumnes) {
+
+        if (mensajeInicial) {
+            mensajeInicial.remove();
+        }
+
         juegoTerminado = false;
 
         nFilesActual = nFiles;
@@ -66,6 +106,10 @@ $(function(){
             height: alcadaTotal + "px",
             position: "relative"
         });
+
+        document.documentElement.style.setProperty("--amplada-carta", ampladaCarta + "px");
+        document.documentElement.style.setProperty("--alcada-carta", alcadaCarta + "px");
+
     }
 
     function crearCartes(nFiles, nColumnes) {
@@ -95,23 +139,24 @@ $(function(){
     function crearCartaHTML(f, c, idCarta) {
         let carta = $(`
             <div class="carta" data-id="${idCarta}">
-                <div class="cara darrera"></div>
-                <div class="cara davant"></div>
+                <div class="cara darrera ` + baralla + `"></div>
+                <div class="cara davant ` + baralla + `"></div>
             </div>
         `);
-
+        
         carta.css({
             position: "absolute",
             left: ((c - 1) * (ampladaCarta + separacioH) + separacioH) + "px",
             top: ((f - 1) * (alcadaCarta + separacioV) + separacioV) + "px"
         });
 
-        let col = (idCarta - 1) % 13;
-        let fila = Math.floor((idCarta - 1) / 13);
+        let col = (idCarta - 1) % columnaPerBaralla;
+        let fila = Math.floor((idCarta - 1) / columnaPerBaralla);
 
         carta.find(".davant").css("background-position", 
             `${-(col * ampladaCarta)}px ${-(fila * alcadaCarta)}px`
         );
+
 
         return carta;
     }
