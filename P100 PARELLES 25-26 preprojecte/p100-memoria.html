@@ -1,30 +1,47 @@
+<!DOCTYPE html>
 <html lang="ca">
 <head>
     <meta charset="utf-8">
-    <title>Donar la volta a una carta - Dinàmic</title>
+    <title>Memòria cartes</title>
+
     <link rel="stylesheet" href="css/style.css">
+
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="js/p100-memoria.js"></script>
 </head>
+
 <body>
+
 <header>
     <h1>Memòria cartes</h1>
-    
-    <div id="controls" style="margin-bottom: 20px;">
+
+    <div id="controls">
         <label for="nivell">Tria la mida del tauler: </label>
         <select id="nivell">
-            <option value="2x2">Molt Fàcil (2 files x 2 col - 4 cartes)</option>
-            <option value="4x4" selected>Normal (4 files x 4 col - 16 cartes)</option>
-            <option value="4x6">Difícil (4 files x 6 col - 24 cartes)</option>
+            <option value="2x2">Molt fàcil (2x2)</option>
+            <option value="4x4" selected>Normal (4x4)</option>
+            <option value="4x6">Difícil (4x6)</option>
         </select>
         <button id="btn-iniciar">Generar Joc</button>
     </div>
 </header>
 
-<div id="tauler"></div>
+<div id="juego-contenedor">
+    
+    <div id="tauler"></div>
+
+    <div id="marcador">
+        <p>Parelles: <span id="parelles">0</span></p>
+        <p>Clics: <span id="clics">0</span></p>
+        <p>Clics restants: <span id="clics-restants">0</span></p>
+        <p>Temps: <span id="tiempo">0</span>s</p>
+    </div>
+
+</div>
 
 <footer>
     <p>Fes clic en una carta per donar-li la volta</p>
 </footer>
+
 </body>
 </html>
