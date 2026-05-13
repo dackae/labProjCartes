@@ -282,7 +282,7 @@ $(function(){
         $("#clics-restants").text(maxClicks - contadorClicks);
     }
 
-    // ---------- TEMPORIZADOR ----------
+   
     function iniciarTemporizador(nFiles, nColumnes) {
         clearInterval(temporizador);
 
