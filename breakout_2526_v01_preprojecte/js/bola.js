@@ -97,22 +97,29 @@ class Bola {
        //1r REVISAR SI EXISTEIX UN PUNT D'INTERSECCIÓ EN UN DELS 4 SEGMENTS
        //SI EXISTEIX, QUIN ÉS AQUEST PUNT
        //si hi ha més d'un, el més ajustat
-       let puntI;
-       let distanciaI;
-       let puntIMin;
-       let distanciaIMin = Infinity;
-       let voraI;
+        let puntI;
+        let distanciaI;
+        let puntIMin;
+        let distanciaIMin = Infinity;
+        let voraI;
 
        //calcular punt d'intersecció amb les 4 vores del rectangle
        //necessitem coneixer els 4 segments del rectangle
        //vora superior
-       let segmentVoraSuperior = new  Segment(rectangle.posicio,
-           new Punt(rectangle.posicio.x + rectangle.amplada, rectangle.posicio.y));
+        let segmentVoraSuperior = new  Segment(rectangle.posicio,
+            new Punt(rectangle.posicio.x + rectangle.amplada, rectangle.posicio.y));
        //vora inferior
-      
+        let segmentVoraInferior = new Segment(
+            Punt(rectangle.posicio.x, rectangle.posicio.y + rectangle.alcada),
+            Punt(rectangle.posicio.x + rectangle.amplada, rectangle.posicio.y + rectangle.alcada)); 
        //vora esquerra
-      
+        let segmentVoraEsquerra = new Segment(
+            rectangle.posicio,
+            Punt(rectangle.posicio.x, rectangle.posicio.y + rectangle.alcada));
        //vora dreta
+        let sefmentVoraDreta = new Segment(
+            Punt(rectangle.posicio.x + rectangle.amplada, rectangle.posicio.y),
+            Punt(rectangle.posicio.x + rectangle.amplada, rectangle.posicio.y + rectangle.alcada));
       
 
        //2n REVISAR SI EXISTEIX UN PUNT D'INTERSECCIÓ EN UN DELS 4 SEGMENTS
