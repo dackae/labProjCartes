@@ -2,6 +2,8 @@
 * CLASSE JOC
 */
 
+let filesMur = 3;
+let columnesMur = 10;
 class Joc{
     constructor(canvas,ctx) {
         this.canvas = canvas;
@@ -16,6 +18,7 @@ class Joc{
         this.bola = new Bola(new Punt(this.canvas.width/2,this.canvas.height/2),3);
         this.pala = new Pala(new Punt((this.canvas.width-60)/2,this.canvas.height-15),60,4);
         this.totxo = new Totxo(new Punt((this.canvas.width-120)/2,(this.canvas.height-20)/3), 120, 20, "#0ad");  // només posem un totxo gegant
+        crearMur();
 
         this.key = {
             LEFT:{code:37, pressed:false},
@@ -50,9 +53,18 @@ class Joc{
     }
 
     update(){
-        this.bola.update(this.canvas);
+        this.bola.update(this.canvas, this.mur);
         this.pala.update();
         this.draw();       
 
+    }
+
+    crearMur(totxo){
+        this.mur = Array<Totxo> [];
+        for(let j; j<filesMur; j++) {
+            for(let i; i<columnesMur; i++){
+                this.mur += new Totxo (new Punt (this.canvas.width/columnesMur * i, this.canvas.height/10 * j), this.totxoamplada, this.totxoalcada);
+            }
+        }
     }
 }

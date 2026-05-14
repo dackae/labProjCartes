@@ -21,7 +21,7 @@ class Bola {
         this.posicio.y += y;
     }
 
-    update(canvas){
+    update(canvas, mur){
         let puntActual = this.posicio;
         let puntSeguent= new Punt(this.posicio.x + this.vx,
                             this.posicio.y + this.vy);
@@ -68,6 +68,20 @@ class Bola {
         //Xoc amb la pala
 
         //Xoc amb els totxos del mur
+        if(!xoc) {
+            for (let totxo of mur) {
+                let resultat = this.interseccioSegmentRectangle(trajectoria, totxo);
+                if (resultat) {
+                    totxo.tocat = true;
+                    if(resultat.vora == "superior" || resultat.vora == "inferior") {
+                        this.vy = -this.vy;
+                    } else {
+                        this.vx = -this.vx;
+                    }
+                    xoc = true;
+                }
+            }
+        }
         //Utilitzem el mètode INTERSECCIOSEGMENTRECTANGLE
         
 
