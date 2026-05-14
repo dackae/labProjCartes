@@ -2,8 +2,8 @@ class Bola {
     constructor(puntPosicio, radi) {
         this.radi = radi;
         this.posicio = puntPosicio;
-        this.vx = 1;
-        this.vy = -1;
+        this.vx = 1; //velocidad horizontal
+        this.vy = -1; //velocidad vertical
         this.color = "#fff";
       
     };
@@ -15,12 +15,13 @@ class Bola {
         ctx.fill();
         ctx.closePath();
     }
+
     mou(x,y){
         this.posicio.x += x;
         this.posicio.y += y;
     }
-    update(){
 
+    update(canvas){
         let puntActual = this.posicio;
         let puntSeguent= new Punt(this.posicio.x + this.vx,
                             this.posicio.y + this.vy);
@@ -39,8 +40,30 @@ class Bola {
             this.vy = -this.vy;
         }
         //Xoc lateral dret
+        if(trajectoria.puntB.x + this.radi > canvas.width){
+            exces = (trajectoria.puntB.x + this.radi - canvas.width) / this.vx;
+            this.posicio.x = canvas.width - this.radi;
+            this.posicio.y = trajectoria.puntB.y - exces*this.vy;
+            xoc = true;
+            this.vx = -this.vx;
+            console.log("xoc lateral");
+        }
         //Xoc lateral esquerra
+        if(trajectoria.puntB.x - this.radi < 0){
+            exces = (trajectoria.puntB.x - this.radi) / this.vx;
+            this.posicio.x = this.radi;
+            this.posicio.y = trajectoria.puntB.y - exces*this.vy;
+            xoc = true;
+            this.vx = -this.vx;
+        }
         //Xoc lateral inferior
+        if(trajectoria.puntB.y + this.radi > canvas.height) {
+            exces = (trajectoria.puntB.y + this.radi - canvas.height) / this.vy;
+            this.posicio.x = trajectoria.puntB.x - exces*this.vx;
+            this.posicio.y = canvas.height - this.radi;
+            xoc = true;
+            this.vy = -this.vy;
+        }
       
         //Xoc amb la pala
 
