@@ -1,6 +1,9 @@
 /*
 * CLASSE BOLA
 */
+/*
+* CLASSE BOLA
+*/
 class Bola {
 
     constructor(puntPosicio, radi){

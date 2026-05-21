@@ -137,7 +137,7 @@ class Joc {
         );
     }
     update(){
-        this.bola.update();
+        this.bola.update(this.canvas, this.mur);
         this.pala.update();
         this.draw();
     }
