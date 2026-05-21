@@ -1,112 +1,307 @@
+/*
+* CLASSE BOLA
+*/
 class Bola {
-    constructor(puntPosicio, radi) {
+
+    constructor(puntPosicio, radi){
         this.radi = radi;
         this.posicio = puntPosicio;
-        this.vx = 1;
-        this.vy = -1;
+        this.vx = 3;
+        this.vy = -3;
         this.color = "#fff";
-      
-    };
+    }
 
-    draw(ctx) {
+    draw(ctx){
         ctx.beginPath();
         ctx.fillStyle = this.color;
-        ctx.arc(this.posicio.x, this.posicio.y, this.radi, 0, 2 * Math.PI);
+        ctx.arc(
+            this.posicio.x,
+            this.posicio.y,
+            this.radi,
+            0,
+            2 * Math.PI
+        );
+
         ctx.fill();
         ctx.closePath();
     }
-    mou(x,y){
-        this.posicio.x += x;
-        this.posicio.y += y;
-    }
+
     update(){
 
         let puntActual = this.posicio;
-        let puntSeguent= new Punt(this.posicio.x + this.vx,
-                            this.posicio.y + this.vy);
-        let trajectoria= new Segment(puntActual, puntSeguent);
-        let exces;
-        let xoc = false;
-        
+        let puntSeguent = new Punt(
+            this.posicio.x + this.vx,
+            this.posicio.y + this.vy
+        );
 
-        //Xoc amb els laterals del canvas
-        //Xoc lateral superior
-        if(trajectoria.puntB.y - this.radi < 0){
-            exces= (trajectoria.puntB.y - this.radi)/this.vy;
-            this.posicio.x = trajectoria.puntB.x - exces*this.vx;
-            this.posicio.y = this.radi;
-            xoc = true;
+        let trajectoria =
+            new Segment(
+                puntActual,
+                puntSeguent
+            );
+
+        if(puntSeguent.y - this.radi < 0){
+
             this.vy = -this.vy;
         }
-        //Xoc lateral dret
-        //Xoc lateral esquerra
-        //Xoc lateral inferior
-      
-        //Xoc amb la pala
 
-        //Xoc amb els totxos del mur
-        //Utilitzem el mètode INTERSECCIOSEGMENTRECTANGLE
-        
+        if(puntSeguent.x - this.radi < 0){
 
-        if (!xoc){
-            this.posicio.x = trajectoria.puntB.x;
-            this.posicio.y = trajectoria.puntB.y;
-        }     
-        
+            this.vx = -this.vx;
+        }
+        if(
+            puntSeguent.x + this.radi >
+            joc.canvas.width
+        ){
+
+            this.vx = -this.vx;
+        }
+        if(
+            puntSeguent.y + this.radi >
+            joc.canvas.height
+        ){
+
+            joc.vides--;
+
+            if(joc.vides <= 0){
+
+                alert("GAME OVER");
+
+                localStorage.setItem(
+                    "resultat",
+                    "GAME OVER"
+                );
+
+                localStorage.setItem(
+                    "punts",
+                    joc.punts
+                );
+
+                location.reload();
+            }
+
+            this.posicio.x =
+                joc.canvas.width / 2;
+
+            this.posicio.y =
+                joc.canvas.height / 2;
+
+            this.vx = 3;
+
+            this.vy = -3;
+
+            return;
+        }
+
+        if(
+            puntSeguent.y + this.radi >=
+            joc.pala.posicio.y &&
+
+            puntSeguent.x >=
+            joc.pala.posicio.x &&
+
+            puntSeguent.x <=
+            joc.pala.posicio.x +
+            joc.pala.amplada
+        ){
+
+            this.vy = -this.vy;
+        }
+
+        for(let totxo of joc.totxos){
+
+            if(!totxo.tocat){
+
+                let colis =
+                    this.interseccioSegmentRectangle(
+                        trajectoria,
+                        totxo
+                    );
+
+                if(colis){
+                    totxo.tocat = true;
+                    joc.punts += totxo.punts;
+                    if(
+                        colis.vora == "superior" ||
+                        colis.vora == "inferior"
+                    ){
+
+                        this.vy = -this.vy;
+                    }
+                    if(
+                        colis.vora == "esquerra" ||
+                        colis.vora == "dreta"
+                    ){
+
+                        this.vx = -this.vx;
+                    }
+
+                    break;
+                }
+            }
+        }
+        this.posicio.x += this.vx;
+
+        this.posicio.y += this.vy;
+        let totsEliminats = true;
+
+        for(let totxo of joc.totxos){
+
+            if(!totxo.tocat){
+
+                totsEliminats = false;
+            }
+        }
+
+        if(totsEliminats){
+
+            alert("HAS GUANYAT!");
+
+            localStorage.setItem(
+                "resultat",
+                "HAS GUANYAT"
+            );
+
+            localStorage.setItem(
+                "punts",
+                joc.punts
+            );
+
+            location.reload();
+        }
     }
+    interseccioSegmentRectangle(
+        segment,
+        rectangle
+    ){
 
-    interseccioSegmentRectangle(segment, rectangle){
+        let puntI;
 
-       //1r REVISAR SI EXISTEIX UN PUNT D'INTERSECCIÓ EN UN DELS 4 SEGMENTS
-       //SI EXISTEIX, QUIN ÉS AQUEST PUNT
-       //si hi ha més d'un, el més ajustat
-       let puntI;
-       let distanciaI;
-       let puntIMin;
-       let distanciaIMin = Infinity;
-       let voraI;
+        let distanciaI;
 
-       //calcular punt d'intersecció amb les 4 vores del rectangle
-       //necessitem coneixer els 4 segments del rectangle
-       //vora superior
-       let segmentVoraSuperior = new  Segment(rectangle.posicio,
-           new Punt(rectangle.posicio.x + rectangle.amplada, rectangle.posicio.y));
-       //vora inferior
-      
-       //vora esquerra
-      
-       //vora dreta
-      
+        let puntIMin;
 
-       //2n REVISAR SI EXISTEIX UN PUNT D'INTERSECCIÓ EN UN DELS 4 SEGMENTS
-       //SI EXISTEIX, QUIN ÉS AQUEST PUNT
-       //si hi ha més d'n, el més ajustat
-    
-       //vora superior
-       puntI = segment.puntInterseccio(segmentVoraSuperior);
-       if (puntI){
-           //distancia entre dos punts, el punt inicial del segment i el punt d'intersecció
-           distanciaI = Punt.distanciaDosPunts(segment.puntA,puntI);
-           if (distanciaI < distanciaIMin){
-               distanciaIMin = distanciaI;
-               puntIMin = puntI;
-               voraI = "superior";
-           }
-       }
-       //vora inferior
-       
-       //vora esquerra
-      
-       //vora dreta
-       
-       //Retorna la vora on s'ha produït la col·lisió, i el punt (x,y)
-       if(voraI){
-           return {pI: puntIMin, vora: voraI};
-       }
-    }
+        let distanciaIMin = Infinity;
 
-    distancia = function(p1,p2){
-        return Math.sqrt((p2.x-p1.x)*(p2.x-p1.x)+(p2.y-p1.y)*(p2.y-p1.y));
+        let voraI;
+        
+        let segmentSuperior = new Segment(
+
+            rectangle.posicio,
+
+            new Punt(
+                rectangle.posicio.x +
+                rectangle.amplada,
+
+                rectangle.posicio.y
+            )
+        );
+
+        let segmentInferior = new Segment(
+
+            new Punt(
+                rectangle.posicio.x,
+                rectangle.posicio.y +
+                rectangle.alcada
+            ),
+
+            new Punt(
+                rectangle.posicio.x +
+                rectangle.amplada,
+
+                rectangle.posicio.y +
+                rectangle.alcada
+            )
+        );
+
+        let segmentEsquerra = new Segment(
+
+            rectangle.posicio,
+
+            new Punt(
+                rectangle.posicio.x,
+                rectangle.posicio.y +
+                rectangle.alcada
+            )
+        );
+
+        let segmentDreta = new Segment(
+
+            new Punt(
+                rectangle.posicio.x +
+                rectangle.amplada,
+
+                rectangle.posicio.y
+            ),
+
+            new Punt(
+                rectangle.posicio.x +
+                rectangle.amplada,
+
+                rectangle.posicio.y +
+                rectangle.alcada
+            )
+        );
+
+        let vores = [
+
+            {
+                nom:"superior",
+                seg:segmentSuperior
+            },
+
+            {
+                nom:"inferior",
+                seg:segmentInferior
+            },
+
+            {
+                nom:"esquerra",
+                seg:segmentEsquerra
+            },
+
+            {
+                nom:"dreta",
+                seg:segmentDreta
+            }
+        ];
+        for(let v of vores){
+
+            puntI =
+                segment.puntInterseccio(v.seg);
+
+            if(puntI){
+
+                distanciaI =
+                    Punt.distanciaDosPunts(
+                        segment.puntA,
+                        puntI
+                    );
+
+                if(
+                    distanciaI <
+                    distanciaIMin
+                ){
+
+                    distanciaIMin =
+                        distanciaI;
+
+                    puntIMin = puntI;
+
+                    voraI = v.nom;
+                }
+            }
+        }
+        if(voraI){
+
+            return {
+
+                pI: puntIMin,
+
+                vora: voraI
+            };
+        }
+
+        return null;
     }
 }
-
