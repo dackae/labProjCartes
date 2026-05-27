@@ -48,30 +48,88 @@ class Joc {
 
 
     crearTotxos(){
-        let files = 4;
-        let columnes = 8;
-        let amplada = 70;
-        let alcada = 20;
-        let separacio = 10;
-        let offsetTop = 50;
-        let offsetLeft = 35;
-        for(let f = 0; f < files; f++){
-            for(let c = 0; c < columnes; c++){
-                let x =
-                    offsetLeft +
-                    c * (amplada + separacio);
-                let y =
-                    offsetTop +
-                    f * (alcada + separacio);
-                let totxo = new Totxo(
-                    new Punt(x,y),
-                    amplada,
-                    alcada
-                );
-                this.totxos.push(totxo);
+
+    let files = 4;
+
+    let columnes = 8;
+
+    let amplada = 70;
+
+    let alcada = 20;
+
+    let separacio = 10;
+
+    let offsetTop = 50;
+
+    let offsetLeft = 35;
+
+    let dificultat =
+        localStorage.getItem("dificultat");
+
+    for(let f = 0; f < files; f++){
+
+        for(let c = 0; c < columnes; c++){
+
+            let x =
+                offsetLeft +
+                c * (amplada + separacio);
+
+            let y =
+                offsetTop +
+                f * (alcada + separacio);
+
+            let vida = 1;
+
+            let punts = 10;
+
+            let color = "#0ad";
+
+            if(dificultat == "facil"){
+
+                vida = 1;
+
+                punts = 10;
+
+                color = "#2ecc71";
             }
+
+            else if(dificultat == "normal"){
+
+                vida = 2;
+
+                punts = 20;
+
+                color = "#f39c12";
+            }
+
+            else if(dificultat == "dificil"){
+
+                vida = 3;
+
+                punts = 30;
+
+                color = "#e74c3c";
+            }
+
+            let totxo = new Totxo(
+
+                new Punt(x,y),
+
+                amplada,
+
+                alcada,
+
+                vida,
+
+                punts,
+
+                color
+            );
+
+            this.totxos.push(totxo);
         }
     }
+}
 
     inicialitza(){
         $(document).on(

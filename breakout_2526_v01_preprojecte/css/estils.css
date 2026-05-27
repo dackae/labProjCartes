@@ -269,3 +269,82 @@ body {
 
     background-color:#770;
 }
+
+.mensaje-final{
+
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100vw;
+    height: 100vh;
+
+    background: rgba(0,0,0,0.7);
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    z-index: 999999;
+}
+
+.mensaje-contenido{
+
+    background: white;
+
+    color: black;
+
+    padding: 30px;
+
+    border-radius: 15px;
+
+    min-width: 350px;
+
+    text-align: center;
+
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+.mensaje-contenido h2{
+
+    margin-bottom: 15px;
+
+    font-size: 32px;
+}
+
+.mensaje-contenido p{
+
+    font-size: 18px;
+
+    margin: 10px 0;
+}
+
+.botones-final{
+
+    margin-top: 20px;
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 10px;
+}
+
+.botones-final button{
+
+    padding: 10px 20px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    background: #222;
+
+    color: white;
+
+    font-size: 16px;
+}

@@ -1,47 +1,64 @@
 /*
 * CLASSE BOLA
 */
-/*
-* CLASSE BOLA
-*/
+
 class Bola {
 
     constructor(puntPosicio, radi){
+
         this.radi = radi;
+
         this.posicio = puntPosicio;
+
         this.vx = 3;
+
         this.vy = -3;
+
         this.color = "#fff";
     }
 
     draw(ctx){
+
         ctx.beginPath();
+
         ctx.fillStyle = this.color;
+
         ctx.arc(
+
             this.posicio.x,
+
             this.posicio.y,
+
             this.radi,
+
             0,
+
             2 * Math.PI
         );
 
         ctx.fill();
+
         ctx.closePath();
     }
 
     update(){
 
         let puntActual = this.posicio;
+
         let puntSeguent = new Punt(
+
             this.posicio.x + this.vx,
+
             this.posicio.y + this.vy
         );
 
-        let trajectoria =
-            new Segment(
-                puntActual,
-                puntSeguent
-            );
+        let trajectoria = new Segment(
+
+            puntActual,
+
+            puntSeguent
+        );
+
 
         if(puntSeguent.y - this.radi < 0){
 
@@ -52,6 +69,7 @@ class Bola {
 
             this.vx = -this.vx;
         }
+
         if(
             puntSeguent.x + this.radi >
             joc.canvas.width
@@ -59,6 +77,8 @@ class Bola {
 
             this.vx = -this.vx;
         }
+
+
         if(
             puntSeguent.y + this.radi >
             joc.canvas.height
@@ -68,21 +88,10 @@ class Bola {
 
             if(joc.vides <= 0){
 
-                alert("GAME OVER");
+                Display.gameOver(joc.punts);
 
-                localStorage.setItem(
-                    "resultat",
-                    "GAME OVER"
-                );
-
-                localStorage.setItem(
-                    "punts",
-                    joc.punts
-                );
-
-                location.reload();
+                return;
             }
-
             this.posicio.x =
                 joc.canvas.width / 2;
 
@@ -97,6 +106,7 @@ class Bola {
         }
 
         if(
+
             puntSeguent.y + this.radi >=
             joc.pala.posicio.y &&
 
@@ -110,36 +120,42 @@ class Bola {
 
             this.vy = -this.vy;
         }
-/*        if (puntSeguent.y + this.radi >= joc.pala.posicio.y &&
-            puntSeguent.y +this.radi <= joc.pala.posicio.y + joc.pala.alcada &&
-            (puntSeguent.x + this.radi == joc.pala.posicio.x ||
-                puntSeguent.x + this.radi == joc.pala.posicio.x + joc.pala.posicio + joc.pala.amplada)){
-                    this.vx = -this.vx;
-        }
-*/
 
         for(let totxo of joc.totxos){
 
             if(!totxo.tocat){
 
                 let colis =
+
                     this.interseccioSegmentRectangle(
+
                         trajectoria,
+
                         totxo
                     );
 
                 if(colis){
-                    totxo.tocat = true;
-                    joc.punts += totxo.punts;
+
+
+                    let puntsGuanyats =
+                        totxo.colisionar();
+
+                    joc.punts += puntsGuanyats;
+
                     if(
+
                         colis.vora == "superior" ||
+
                         colis.vora == "inferior"
                     ){
 
                         this.vy = -this.vy;
                     }
+
                     if(
+
                         colis.vora == "esquerra" ||
+
                         colis.vora == "dreta"
                     ){
 
@@ -150,9 +166,12 @@ class Bola {
                 }
             }
         }
+
         this.posicio.x += this.vx;
 
         this.posicio.y += this.vy;
+
+
         let totsEliminats = true;
 
         for(let totxo of joc.totxos){
@@ -165,21 +184,12 @@ class Bola {
 
         if(totsEliminats){
 
-            alert("HAS GUANYAT!");
+            Display.victoria(joc.punts);
 
-            localStorage.setItem(
-                "resultat",
-                "HAS GUANYAT"
-            );
-
-            localStorage.setItem(
-                "punts",
-                joc.punts
-            );
-
-            location.reload();
+            return;
         }
     }
+
     interseccioSegmentRectangle(
         segment,
         rectangle
@@ -194,12 +204,13 @@ class Bola {
         let distanciaIMin = Infinity;
 
         let voraI;
-        
+
         let segmentSuperior = new Segment(
 
             rectangle.posicio,
 
             new Punt(
+
                 rectangle.posicio.x +
                 rectangle.amplada,
 
@@ -210,12 +221,15 @@ class Bola {
         let segmentInferior = new Segment(
 
             new Punt(
+
                 rectangle.posicio.x,
+
                 rectangle.posicio.y +
                 rectangle.alcada
             ),
 
             new Punt(
+
                 rectangle.posicio.x +
                 rectangle.amplada,
 
@@ -229,7 +243,9 @@ class Bola {
             rectangle.posicio,
 
             new Punt(
+
                 rectangle.posicio.x,
+
                 rectangle.posicio.y +
                 rectangle.alcada
             )
@@ -238,6 +254,7 @@ class Bola {
         let segmentDreta = new Segment(
 
             new Punt(
+
                 rectangle.posicio.x +
                 rectangle.amplada,
 
@@ -245,6 +262,7 @@ class Bola {
             ),
 
             new Punt(
+
                 rectangle.posicio.x +
                 rectangle.amplada,
 
@@ -275,6 +293,7 @@ class Bola {
                 seg:segmentDreta
             }
         ];
+
         for(let v of vores){
 
             puntI =
@@ -283,8 +302,11 @@ class Bola {
             if(puntI){
 
                 distanciaI =
+
                     Punt.distanciaDosPunts(
+
                         segment.puntA,
+
                         puntI
                     );
 
