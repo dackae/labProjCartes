@@ -16,19 +16,13 @@ class Display {
 
     window.location.href = "menu.html";
 }
-    static victoria(punts) {
+   static victoria(punts) {
 
     guardarRecord(punts);
 
-    localStorage.setItem(
-        "resultat",
-        "YOU WIN"
-    );
+    localStorage.setItem("resultat", "VICTORIA");
 
-    localStorage.setItem(
-        "punts",
-        punts
-    );
+    localStorage.setItem("punts", punts);
 
     window.location.href = "menu.html";
 }

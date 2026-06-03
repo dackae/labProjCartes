@@ -53,30 +53,115 @@ class Menu {
         `;
     }
 }
-    mostrarMensajeFinal() {
+    mostrarMensajeFinal(){
 
-        let resultat =
-            localStorage.getItem("resultat");
+    let resultat =
+        localStorage.getItem("resultat");
 
-        let punts =
-            localStorage.getItem("punts");
+    let punts =
+        localStorage.getItem("punts");
 
-        let nick =
-            localStorage.getItem("nick");
+    let nick =
+        localStorage.getItem("nick");
 
-        if(resultat === null){
-            return;
+    if(resultat === null){
+        return;
+    }
+
+    const mensaje =
+        document.createElement("div");
+
+    mensaje.classList.add("mensaje-final");
+
+
+    if(resultat === "VICTORIA"){
+
+        let dificultat =
+            localStorage.getItem("dificultat");
+
+        let seguentNivell = "";
+
+        if(dificultat === "facil"){
+
+            seguentNivell = "NORMAL";
         }
-        console.log(resultat, punts, nick);
-        const mensaje = document.createElement("div");
+        else if(dificultat === "normal"){
 
-        mensaje.classList.add("mensaje-final");
+            seguentNivell = "DIFICIL";
+        }
+
+        if(dificultat === "dificil"){
+
+            mensaje.innerHTML = `
+
+                <div class="mensaje-contenido">
+
+                    <h2>HAS COMPLETAT EL JOC!</h2>
+
+                    <p>Jugador: ${nick}</p>
+
+                    <p>Puntuació Final: ${punts}</p>
+
+                    <div class="botones-final">
+
+                        <button id="btn-cerrar">
+
+                            Tancar
+
+                        </button>
+
+                    </div>
+
+                </div>
+            `;
+        }
+        else{
+
+            mensaje.innerHTML = `
+
+                <div class="mensaje-contenido">
+
+                    <h2>HAS GUANYAT!</h2>
+
+                    <p>Jugador: ${nick}</p>
+
+                    <p>Puntuació: ${punts}</p>
+
+                    <p>
+
+                        Vols passar al nivell
+                        ${seguentNivell}?
+
+                    </p>
+
+                    <div class="botones-final">
+
+                        <button id="btn-seguent">
+
+                            Següent nivell
+
+                        </button>
+
+                        <button id="btn-cerrar">
+
+                            Tancar
+
+                        </button>
+
+                    </div>
+
+                </div>
+            `;
+        }
+    }
+
+    else{
 
         mensaje.innerHTML = `
 
             <div class="mensaje-contenido">
 
-                <h2>${resultat}</h2>
+                <h2>GAME OVER</h2>
 
                 <p>Jugador: ${nick}</p>
 
@@ -100,31 +185,82 @@ class Menu {
 
             </div>
         `;
-
-        document.body.appendChild(mensaje);
-
-        document
-            .getElementById("btn-jugar")
-            .addEventListener("click", () => {
-
-                localStorage.removeItem("resultat");
-
-                localStorage.removeItem("punts");
-
-                window.location.href = "index.html";
-            });
-
-        document
-            .getElementById("btn-cerrar")
-            .addEventListener("click", () => {
-
-                mensaje.remove();
-
-                localStorage.removeItem("resultat");
-
-                localStorage.removeItem("punts");
-            });
     }
+
+    document.body.appendChild(mensaje);
+
+
+    let btnJugar =
+        document.getElementById("btn-jugar");
+
+    if(btnJugar){
+
+        btnJugar.addEventListener("click", () => {
+
+            localStorage.removeItem("resultat");
+
+            localStorage.setItem("punts", 0);
+
+            window.location.href = "index.html";
+        });
+    }
+
+    let btnSeguent =
+        document.getElementById("btn-seguent");
+
+    if(btnSeguent){
+
+        btnSeguent.addEventListener("click", () => {
+
+            let dificultat =
+                localStorage.getItem("dificultat");
+
+            if(dificultat === "facil"){
+
+                localStorage.setItem(
+                    "dificultat",
+                    "normal"
+                );
+
+                localStorage.setItem(
+                    "vides",
+                    3
+                );
+            }
+            else if(dificultat === "normal"){
+
+                localStorage.setItem(
+                    "dificultat",
+                    "dificil"
+                );
+
+                localStorage.setItem(
+                    "vides",
+                    1
+                );
+            }
+
+            localStorage.removeItem("resultat");
+
+
+            window.location.href =
+                "index.html";
+        });
+    }
+
+    let btnCerrar =
+        document.getElementById("btn-cerrar");
+
+    if(btnCerrar){
+
+        btnCerrar.addEventListener("click", () => {
+
+            mensaje.remove();
+
+            localStorage.removeItem("resultat");
+        });
+    }
+}
 
     comencarJoc() {
 
@@ -159,15 +295,62 @@ class Menu {
         }
         else if(dificultat == "dificil"){
 
-            vides = 1;
+            vides = 2;
         }
 
         localStorage.setItem("vides", vides);
 
+        if(localStorage.getItem("punts") === null){
+
         localStorage.setItem("punts", 0);
+}
 
         window.location.href = "index.html";
     }
+    passarSeguentNivell(){
+
+    let dificultat =
+        localStorage.getItem("dificultat");
+
+    if(dificultat == "facil"){
+
+        localStorage.setItem(
+            "dificultat",
+            "normal"
+        );
+
+        localStorage.setItem(
+            "vides",
+            3
+        );
+    }
+
+    else if(dificultat == "normal"){
+
+        localStorage.setItem(
+            "dificultat",
+            "dificil"
+        );
+
+        localStorage.setItem(
+            "vides",
+            1
+        );
+    }
+
+    else{
+
+        alert("Has completat el joc!");
+
+        localStorage.removeItem("resultat");
+
+        return;
+    }
+
+    localStorage.removeItem("resultat");
+
+    window.location.href = "index.html";
+}
 }
 
 window.onload = () => {

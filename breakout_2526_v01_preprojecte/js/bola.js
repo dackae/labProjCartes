@@ -136,7 +136,10 @@ class Bola {
 
                 if(colis){
 
+                    joc.ultimaColisioTotxo =
+                        Date.now();
 
+                    joc.potReiniciarBola = false;
                     let puntsGuanyats =
                         totxo.colisionar();
 
