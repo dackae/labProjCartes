@@ -107,8 +107,14 @@ class Bola {
 
         if(
 
+            this.vy > 0 &&
+
             puntSeguent.y + this.radi >=
             joc.pala.posicio.y &&
+
+            puntSeguent.y - this.radi <=
+            joc.pala.posicio.y +
+            joc.pala.alcada &&
 
             puntSeguent.x >=
             joc.pala.posicio.x &&
@@ -118,7 +124,11 @@ class Bola {
             joc.pala.amplada
         ){
 
-            this.vy = -this.vy;
+            this.posicio.y =
+                joc.pala.posicio.y -
+                this.radi - 1;
+
+            this.vy = -Math.abs(this.vy);
         }
 
         for(let totxo of joc.totxos){
