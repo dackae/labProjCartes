@@ -186,11 +186,15 @@ class Bola {
         }
 
         if(totsEliminats){
+        localStorage.setItem(
+            "puntsNivellAnterior",
+            joc.punts
+        );
 
-            Display.victoria(joc.punts);
+        Display.victoria(joc.punts);
 
-            return;
-        }
+        return;
+}
     }
 
     interseccioSegmentRectangle(

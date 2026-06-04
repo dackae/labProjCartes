@@ -193,59 +193,80 @@ class Menu {
     let btnJugar =
         document.getElementById("btn-jugar");
 
-    if(btnJugar){
+        if(btnJugar){
 
-        btnJugar.addEventListener("click", () => {
+    btnJugar.addEventListener("click", () => {
 
-            localStorage.removeItem("resultat");
+        let puntsGuardats =
 
-            localStorage.setItem("punts", 0);
+            parseInt(
+                localStorage.getItem(
+                    "puntsNivellAnterior"
+                )
+            ) || 0;
+        localStorage.setItem(
+            "punts",
+            puntsGuardats
+        );
 
-            window.location.href = "index.html";
-        });
-    }
+        localStorage.removeItem(
+            "resultat"
+        );
+
+        window.location.href =
+            "index.html";
+    });
+}
 
     let btnSeguent =
         document.getElementById("btn-seguent");
 
     if(btnSeguent){
 
-        btnSeguent.addEventListener("click", () => {
+       btnSeguent.addEventListener("click", () => {
 
-            let dificultat =
-                localStorage.getItem("dificultat");
+    let dificultat =
+        localStorage.getItem(
+            "dificultat"
+        );
 
-            if(dificultat === "facil"){
+    if(dificultat === "facil"){
 
-                localStorage.setItem(
-                    "dificultat",
-                    "normal"
-                );
+        localStorage.setItem(
+            "dificultat",
+            "normal"
+        );
 
-                localStorage.setItem(
-                    "vides",
-                    3
-                );
-            }
-            else if(dificultat === "normal"){
+        localStorage.setItem(
+            "vides",
+            3
+        );
+    }
+    else if(dificultat === "normal"){
 
-                localStorage.setItem(
-                    "dificultat",
-                    "dificil"
-                );
+        localStorage.setItem(
+            "dificultat",
+            "dificil"
+        );
 
-                localStorage.setItem(
-                    "vides",
-                    1
-                );
-            }
+        localStorage.setItem(
+            "vides",
+            2
+        );
+    }
 
-            localStorage.removeItem("resultat");
+    localStorage.setItem(
+        "continuarPartida",
+        "true"
+    );
 
+    localStorage.removeItem(
+        "resultat"
+    );
 
-            window.location.href =
-                "index.html";
-        });
+    window.location.href =
+        "index.html";
+});
     }
 
     let btnCerrar =
@@ -264,49 +285,61 @@ class Menu {
 
     comencarJoc() {
 
-        let nick = this.nick.value.trim();
+    let nick = this.nick.value.trim();
 
-        if(nick === ""){
+    if(nick === ""){
 
-            alert("Introdueix un nickname");
+        alert("Introdueix un nickname");
 
-            return;
-        }
-
-        let dificultat =
-            this.dificultat.value;
-
-        localStorage.setItem("nick", nick);
-
-        localStorage.setItem(
-            "dificultat",
-            dificultat
-        );
-
-        let vides = 3;
-
-        if(dificultat == "facil"){
-
-            vides = 5;
-        }
-        else if(dificultat == "normal"){
-
-            vides = 3;
-        }
-        else if(dificultat == "dificil"){
-
-            vides = 2;
-        }
-
-        localStorage.setItem("vides", vides);
-
-        if(localStorage.getItem("punts") === null){
-
-        localStorage.setItem("punts", 0);
-}
-
-        window.location.href = "index.html";
+        return;
     }
+
+    let dificultat =
+        this.dificultat.value;
+
+    localStorage.setItem(
+        "nick",
+        nick
+    );
+
+    localStorage.setItem(
+        "dificultat",
+        dificultat
+    );
+
+    let vides = 3;
+
+    if(dificultat === "facil"){
+
+        vides = 5;
+    }
+    else if(dificultat === "normal"){
+
+        vides = 3;
+    }
+    else if(dificultat === "dificil"){
+
+        vides = 2;
+    }
+    localStorage.setItem(
+        "vides",
+        vides
+    );
+    localStorage.setItem(
+        "punts",
+        0
+    );
+    localStorage.removeItem(
+        "puntsNivellAnterior"
+    );
+
+    localStorage.removeItem(
+        "resultat"
+    );
+
+    window.location.href =
+        "index.html";
+}
     passarSeguentNivell(){
 
     let dificultat =

@@ -238,65 +238,73 @@ class Joc {
         this.ctx.fillStyle = "white";
 
         this.ctx.font = "16px Arial";
-
-        this.ctx.fillText(
-
-            "Punts: " + this.punts,
-
-            10,
-
-            20
-        );
-
-        this.ctx.fillText(
-
-            "Vides: " + this.vides,
-
-            10,
-
-            40
-        );
-
-        this.ctx.fillText(
-
-            "Nivell: " +
-
-            localStorage.getItem(
-                "dificultat"
-            ),
-
-            10,
-
-            60
-        );
     }
+    actualitzarHUD(){
 
-    update(){
+    document.getElementById(
+        "hudPunts"
+    ).textContent = this.punts;
 
-        this.bola.update();
+    document.getElementById(
+        "hudVides"
+    ).textContent = this.vides;
 
-        this.pala.update(this.canvas);
+    document.getElementById(
+        "hudNivell"
+    ).textContent =
+        localStorage.getItem(
+            "dificultat"
+        ).toUpperCase();
 
-        localStorage.setItem(
+    if(this.potReiniciarBola){
 
-            "punts",
+        document.getElementById(
+            "hudReset"
+        ).textContent = "PREM R";
+    }
+    else{
 
-            this.punts
+        let segons = Math.max(
+
+            0,
+
+            10 -
+            Math.floor(
+                (Date.now() -
+                this.ultimaColisioTotxo)
+                /1000
+            )
         );
-     if(
 
+        document.getElementById(
+            "hudReset"
+        ).textContent =
+            segons + "s";
+    }
+}
+
+   update(){
+    this.bola.update();
+    this.pala.update(this.canvas);
+    localStorage.setItem(
+        "punts",
+        this.punts
+    );
+    if(
         Date.now() -
-
         this.ultimaColisioTotxo >
-
         10000
     ){
 
         this.potReiniciarBola = true;
     }
+    else{
 
-        this.draw();
+        this.potReiniciarBola = false;
     }
+    this.actualitzarHUD();
+    this.draw();
+}
 
     start(){
 

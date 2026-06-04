@@ -1,8 +1,45 @@
 class Display {
 
-   static gameOver(punts) {
+  static gameOver(punts) {
 
-    guardarRecord(punts);
+    let nick =
+        localStorage.getItem("nick");
+
+    let records =
+        JSON.parse(
+            localStorage.getItem("records")
+        ) || [];
+
+    let existent =
+        records.find(
+            r => r.nick === nick
+        );
+
+    if(existent){
+
+        if(punts > existent.punts){
+
+            existent.punts = punts;
+        }
+    }
+    else{
+
+        records.push({
+            nick: nick,
+            punts: punts
+        });
+    }
+
+    records.sort(
+        (a,b) => b.punts - a.punts
+    );
+
+    records = records.slice(0,5);
+
+    localStorage.setItem(
+        "records",
+        JSON.stringify(records)
+    );
 
     localStorage.setItem(
         "resultat",
@@ -14,17 +51,74 @@ class Display {
         punts
     );
 
-    window.location.href = "menu.html";
+    window.location.href =
+        "menu.html";
 }
    static victoria(punts) {
 
-    guardarRecord(punts);
+    let dificultat =
+        localStorage.getItem(
+            "dificultat"
+        );
 
-    localStorage.setItem("resultat", "VICTORIA");
+    if(dificultat === "dificil"){
 
-    localStorage.setItem("punts", punts);
+        let nick =
+            localStorage.getItem(
+                "nick"
+            );
 
-    window.location.href = "menu.html";
+        let records =
+            JSON.parse(
+                localStorage.getItem(
+                    "records"
+                )
+            ) || [];
+
+        let existent =
+            records.find(
+                r => r.nick === nick
+            );
+
+        if(existent){
+
+            if(punts > existent.punts){
+
+                existent.punts = punts;
+            }
+        }
+        else{
+
+            records.push({
+                nick:nick,
+                punts:punts
+            });
+        }
+
+        records.sort(
+            (a,b) => b.punts - a.punts
+        );
+
+        records = records.slice(0,5);
+
+        localStorage.setItem(
+            "records",
+            JSON.stringify(records)
+        );
+    }
+
+    localStorage.setItem(
+        "resultat",
+        "VICTORIA"
+    );
+
+    localStorage.setItem(
+        "punts",
+        punts
+    );
+
+    window.location.href =
+        "menu.html";
 }
 }
 

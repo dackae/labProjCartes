@@ -15,21 +15,51 @@
 
 <div id="principal">
 
-    <canvas id="joc" width="740" height="400"></canvas>
+    <div id="gameContainer">
 
-    <div id="fiPartida" style="display:none;">
+        <canvas
+            id="joc"
+            width="740"
+            height="400">
+        </canvas>
 
-        <h1 id="titolFinal"></h1>
+        <div id="hud">
 
-        <br>
+            <h2>BREAKOUT</h2>
 
-        <h2 id="puntsFinals"></h2>
+            <div class="hud-item">
 
-        <br>
+                <span>PUNTS</span>
 
-        <button onclick="tornarMenu()">
-            Tornar al menú
-        </button>
+                <p id="hudPunts">0</p>
+
+            </div>
+
+            <div class="hud-item">
+
+                <span>VIDES</span>
+
+                <p id="hudVides">3</p>
+
+            </div>
+
+            <div class="hud-item">
+
+                <span>NIVELL</span>
+
+                <p id="hudNivell">FACIL</p>
+
+            </div>
+
+            <div class="hud-item">
+
+                <span>REINICI BOLA</span>
+
+                <p id="hudReset">10s</p>
+
+            </div>
+
+        </div>
 
     </div>
 
