@@ -63,11 +63,13 @@ class Bola {
         if(puntSeguent.y - this.radi < 0){
 
             this.vy = -this.vy;
+            playSound("rebote");
         }
 
         if(puntSeguent.x - this.radi < 0){
 
             this.vx = -this.vx;
+            playSound("rebote");
         }
 
         if(
@@ -76,6 +78,7 @@ class Bola {
         ){
 
             this.vx = -this.vx;
+            playSound("rebote");
         }
 
 
@@ -92,6 +95,7 @@ class Bola {
 
                 return;
             }
+            playSound("perder");
             this.posicio.x =
                 joc.canvas.width / 2;
 
@@ -129,6 +133,7 @@ class Bola {
                 this.radi - 1;
 
             this.vy = -Math.abs(this.vy);
+            playSound("rebote");
         }
 
         for(let totxo of joc.totxos){
@@ -152,6 +157,8 @@ class Bola {
                     joc.potReiniciarBola = false;
                     let puntsGuanyats =
                         totxo.colisionar();
+
+                    playSound("totxo");
 
                     joc.punts += puntsGuanyats;
 
@@ -201,6 +208,7 @@ class Bola {
             joc.punts
         );
 
+        playSound("victoria");
         Display.victoria(joc.punts);
 
         return;
